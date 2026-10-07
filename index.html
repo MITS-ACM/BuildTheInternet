@@ -3,157 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Build The Internet | MITS ACM</title>
+    <title>BUILD THE INTERNET | SYSTEM TERMINAL</title>
     <link rel="icon" type="image/png" href="acm_logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #1f2937; }
-        .gradient-text { background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(229, 231, 235, 1); }
+        :root {
+            --bg: #0B0B10;
+            --fg: #F8FAFC;
+            --card: #1E1E23;
+            --muted: #94A3B8;
+            --border: #1E293B;
+            --accent: #3B82F6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --destructive: #EF4444;
+            --font-mono: 'Fira Code', monospace;
+            --font-display: 'Share Tech Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: var(--font-mono);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Scanline effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            height: 48px;
+            /* In case logos are dark, add a light background for visibility */
+            background-color: var(--fg);
+            padding: 6px;
+            border-radius: 2px;
+            border: 1px solid var(--border);
+        }
+
+        .system-status {
+            color: var(--accent);
+            font-size: 0.875rem;
+            text-align: right;
+            text-shadow: 0 0 8px var(--accent-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-header::before {
+            content: "> [ ";
+            color: var(--accent);
+        }
+        .section-header::after {
+            content: " ]";
+            color: var(--accent);
+        }
+
+        /* Hero */
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--fg);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(248, 250, 252, 0.3);
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 12px;
+            height: 1em;
+            background-color: var(--accent);
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 2rem;
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .meta-item::before {
+            content: ":: ";
+            color: var(--accent);
+        }
+
+        /* Rules */
+        .rules-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .rules-list li {
+            background-color: var(--card);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .rules-list li strong {
+            color: var(--fg);
+            display: block;
+            margin-bottom: 0.25rem;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+        }
+
+        .rules-list li.critical {
+            border-left-color: var(--destructive);
+        }
+        .rules-list li.critical strong {
+            color: var(--destructive);
+        }
+
+        /* Contracts */
+        .contracts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .contracts-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .contract-node {
+            border: 1px solid var(--border);
+            background: var(--bg);
+            position: relative;
+        }
+
+        .contract-node::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
+        }
+
+        .contract-header {
+            background-color: var(--card);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contract-header h3 {
+            color: var(--fg);
+            font-size: 1.25rem;
+        }
+
+        .node-type {
+            font-size: 0.75rem;
+            color: var(--bg);
+            background-color: var(--muted);
+            padding: 0.1rem 0.5rem;
+            border-radius: 2px;
+        }
+
+        .contract-body {
+            padding: 1.5rem;
+        }
+
+        .endpoint {
+            margin-bottom: 1.5rem;
+        }
+
+        .endpoint:last-child {
+            margin-bottom: 0;
+        }
+
+        .method {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-right: 0.5rem;
+            font-weight: 600;
+        }
+
+        .path {
+            color: var(--fg);
+            font-weight: 500;
+        }
+
+        .desc {
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .payload {
+            margin-top: 0.5rem;
+            background-color: #050508;
+            border: 1px solid #14141A;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: #A3A3A3;
+            overflow-x: auto;
+        }
+
+        .client-flow {
+            counter-reset: flow-step;
+            list-style: none;
+            padding-top: 0.5rem;
+        }
+
+        .client-flow li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .client-flow li::before {
+            counter-increment: flow-step;
+            content: "0" counter(flow-step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--accent);
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+        }
+
+        .req-highlight {
+            color: var(--accent);
+            border-bottom: 1px dashed var(--accent);
+        }
     </style>
 </head>
-<body class="antialiased selection:bg-blue-500 selection:text-white">
+<body>
 
-    <!-- Header Section -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <img src="acm_logo.png" alt="ACM Logo" class="h-12 object-contain">
-            <img src="convergelogo.png" alt="Converge Logo" class="h-12 object-contain">
+    <header>
+        <div class="logo-container">
+            <img src="acm_logo.png" alt="ACM Logo" class="logo">
+            <img src="convergelogo.png" alt="Converge Logo" class="logo">
+        </div>
+        <div class="system-status">
+            STATUS: ONLINE<br>
+            NET: LOCALHOST
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="max-w-6xl mx-auto px-4 py-16 text-center">
-        <h1 class="text-5xl font-extrabold tracking-tight mb-4 text-blue-900">
-            Build The Internet 🌐
-        </h1>
-        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            A 4-hour hands-on technical challenge. Build, connect, and troubleshoot your own mini internet system through contract-driven microservices.
-        </p>
-        <div class="flex justify-center gap-6 text-sm font-medium text-gray-700 bg-blue-50 py-3 px-8 rounded-full inline-flex mx-auto shadow-sm">
-            <span class="flex items-center"><svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Excel Lab, MITS Kochi</span>
-            <span class="flex items-center"><svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>2:00 PM - 6:00 PM</span>
-        </div>
-    </section>
-
-    <!-- Rules Section -->
-    <section class="max-w-4xl mx-auto px-4 py-12">
-        <div class="glass-card rounded-2xl p-8 shadow-lg border-l-8 border-red-500 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-8 opacity-5">
-                <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+    <main>
+        <section class="hero">
+            <h1>BUILD_THE_INTERNET<span class="typing-cursor"></span></h1>
+            <p style="color: var(--muted); max-width: 600px;">
+                A 4-hour hands-on technical challenge. Go beyond using the internet—build and connect your own mini internet system through contract-driven microservices.
+            </p>
+            <div class="meta-info">
+                <span class="meta-item">LOC: EXCEL LAB, MITS KOCHI</span>
+                <span class="meta-item">SYS_TIME: 14:00 - 18:00</span>
             </div>
-            <h2 class="text-3xl font-bold mb-6 text-gray-900 flex items-center">
-                <span class="bg-red-100 text-red-600 p-2 rounded-lg mr-4">⚠️</span> Important Rules
-            </h2>
-            <ul class="space-y-4 text-gray-700 text-lg list-none pl-4">
-                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1 font-bold">1.</span> <b>True Microservices:</b> Exactly 4 separate services. No monoliths.</li>
-                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1 font-bold">2.</span> <b>DNS Discovery Only:</b> Services MUST use acm-dns to find each other. No direct communication without DNS resolution.</li>
-                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1 font-bold">3.</span> <b>Zero Hardcoded IPs:</b> All IP addresses must be dynamic (e.g. inputted by user).</li>
-                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1 font-bold">4.</span> <b>Visual Client Web App:</b> The Client must be a web app with a real-time visual progress indicator of backend events.</li>
-                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1 font-bold">5.</span> <b>Divide and Conquer:</b> 1 Participant = 1 Microservice. AI tools allowed, but do not touch others' code until integration.</li>
-                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1 font-bold">6.</span> <b>Strict API Contracts:</b> You cannot remove or change the provided endpoints. (You may add new ones).</li>
-                <li class="flex items-start"><span class="text-green-500 mr-3 mt-1 font-bold">⭐</span> <b>Bonus Points:</b> Adding individual monitoring dashboards for each microservice.</li>
+        </section>
+
+        <section id="rules">
+            <h2 class="section-header">SYSTEM_CONSTRAINTS</h2>
+            <ul class="rules-list">
+                <li class="critical">
+                    <strong>01. STRICT MICROSERVICES</strong>
+                    Exactly 4 separate services must be built. Monolithic architectures will be rejected by the system.
+                </li>
+                <li>
+                    <strong>02. DYNAMIC DISCOVERY</strong>
+                    Direct inter-service communication is blocked. All services must resolve targets via the <code>acm-dns</code> registry.
+                </li>
+                <li class="critical">
+                    <strong>03. NO HARDCODED IPS</strong>
+                    Zero static IP addresses allowed. IPs must be injected at runtime via user input or environment variables.
+                </li>
+                <li>
+                    <strong>04. VISUAL TELEMETRY</strong>
+                    The <code>acm-app</code> client must be a web application featuring a real-time visual progress indicator of all backend network hops.
+                </li>
+                <li>
+                    <strong>05. ISOLATED DEVELOPMENT</strong>
+                    1 Participant = 1 Microservice. AI tooling is permitted, but cross-module collaboration is restricted until the final integration phase.
+                </li>
+                <li>
+                    <strong>06. IMMUTABLE CONTRACTS</strong>
+                    Provided API endpoints and schemas cannot be modified or removed. Extending with new endpoints is permitted.
+                </li>
             </ul>
-        </div>
-    </section>
+        </section>
 
-    <!-- Services Section -->
-    <section class="max-w-6xl mx-auto px-4 py-12 mb-20">
-        <h2 class="text-3xl font-bold mb-10 text-center text-gray-900">Service API Contracts</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <!-- DNS Service -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="bg-indigo-600 px-6 py-4">
-                    <h3 class="text-xl font-bold text-white">📡 acm-dns</h3>
-                    <p class="text-indigo-200 text-sm">Dynamic Service Discovery</p>
-                </div>
-                <div class="p-6">
-                    <div class="mb-4">
-                        <span class="inline-block bg-blue-100 text-blue-800 font-bold px-2 py-1 rounded text-xs mr-2">GET</span>
-                        <code class="font-bold text-gray-800">/lookup?domain={name}</code>
-                        <p class="text-sm text-gray-600 mt-1">Returns the destination IP for a registered domain.</p>
+        <section id="contracts">
+            <h2 class="section-header">API_CONTRACTS</h2>
+            <div class="contracts-grid">
+                
+                <!-- DNS Service -->
+                <div class="contract-node">
+                    <div class="contract-header">
+                        <h3>acm-dns</h3>
+                        <span class="node-type">REGISTRY</span>
                     </div>
-                    <div>
-                        <span class="inline-block bg-green-100 text-green-800 font-bold px-2 py-1 rounded text-xs mr-2">POST</span>
-                        <code class="font-bold text-gray-800">/register</code>
-                        <p class="text-sm text-gray-600 mt-1 mb-2">Registers a domain to the client's source IP.</p>
-                        <pre class="bg-gray-50 p-3 rounded text-xs text-gray-700 border border-gray-100">Body: { "domain": "auth-service" }</pre>
+                    <div class="contract-body">
+                        <div class="endpoint">
+                            <span class="method">GET</span><span class="path">/lookup?domain={name}</span>
+                            <div class="desc">Resolves a domain name to its current destination IP address.</div>
+                        </div>
+                        <div class="endpoint">
+                            <span class="method">POST</span><span class="path">/register</span>
+                            <div class="desc">Registers a domain name, mapping it to the incoming request's source IP.</div>
+                            <div class="payload">{ "domain": "auth-service" }</div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- DB Service -->
+                <div class="contract-node">
+                    <div class="contract-header">
+                        <h3>acm-db</h3>
+                        <span class="node-type">STORAGE</span>
+                    </div>
+                    <div class="contract-body">
+                        <div class="endpoint">
+                            <span class="method">POST</span><span class="path">/db/users</span>
+                            <div class="desc">Persists a new user record to storage.</div>
+                            <div class="payload">{ "username": "...", "password_hash": "..." }</div>
+                        </div>
+                        <div class="endpoint">
+                            <span class="method">GET</span><span class="path">/db/users/{username}</span>
+                            <div class="desc">Retrieves a stored user record for authentication checks.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Server Service -->
+                <div class="contract-node">
+                    <div class="contract-header">
+                        <h3>acm-server</h3>
+                        <span class="node-type">AUTH</span>
+                    </div>
+                    <div class="contract-body">
+                        <div class="endpoint">
+                            <span class="method">POST</span><span class="path">/register</span>
+                            <div class="desc">Hashes the password and creates a new user account.</div>
+                            <div class="payload">{ "username": "...", "password": "..." }</div>
+                        </div>
+                        <div class="endpoint">
+                            <span class="method">POST</span><span class="path">/login</span>
+                            <div class="desc">Validates credentials and issues a <code>session_id</code> cookie.</div>
+                            <div class="payload">{ "username": "...", "password": "..." }</div>
+                        </div>
+                        <div class="endpoint">
+                            <span class="method">GET</span><span class="path">/whoami</span>
+                            <div class="desc">Inspects the session cookie to return active user details.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client App -->
+                <div class="contract-node" style="border-color: var(--accent);">
+                    <div class="contract-header">
+                        <h3 style="color: var(--accent);">acm-app</h3>
+                        <span class="node-type" style="background-color: var(--accent); color: var(--bg);">GATEWAY</span>
+                    </div>
+                    <div class="contract-body">
+                        <div class="desc" style="margin-top: 0; margin-bottom: 1rem; color: var(--fg);">
+                            Web client implementing the full flow visualization.
+                        </div>
+                        <ul class="client-flow">
+                            <li>Accept DNS Server IP from user input.</li>
+                            <li><span class="req-highlight">Query DNS</span> for the auth server address.</li>
+                            <li><span class="req-highlight">Attempt Login</span> (If fail -> Register -> Retry Login).</li>
+                            <li>Extract and persist the <code>session_id</code> cookie.</li>
+                            <li><span class="req-highlight">Verify Session</span> via <code>/whoami</code> endpoint.</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
+        </section>
+    </main>
 
-            <!-- DB Service -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="bg-emerald-600 px-6 py-4">
-                    <h3 class="text-xl font-bold text-white">💾 acm-db</h3>
-                    <p class="text-emerald-200 text-sm">Low-level User Storage</p>
-                </div>
-                <div class="p-6">
-                    <div class="mb-4">
-                        <span class="inline-block bg-green-100 text-green-800 font-bold px-2 py-1 rounded text-xs mr-2">POST</span>
-                        <code class="font-bold text-gray-800">/db/users</code>
-                        <p class="text-sm text-gray-600 mt-1 mb-2">Save a new user record.</p>
-                        <pre class="bg-gray-50 p-3 rounded text-xs text-gray-700 border border-gray-100">Body: { "username": "alice", "password_hash": "..." }</pre>
-                    </div>
-                    <div>
-                        <span class="inline-block bg-blue-100 text-blue-800 font-bold px-2 py-1 rounded text-xs mr-2">GET</span>
-                        <code class="font-bold text-gray-800">/db/users/{username}</code>
-                        <p class="text-sm text-gray-600 mt-1">Fetch user record by username to retrieve password hash.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Server Service -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="bg-rose-600 px-6 py-4">
-                    <h3 class="text-xl font-bold text-white">⚙️ acm-server</h3>
-                    <p class="text-rose-200 text-sm">Auth & Session Management</p>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div>
-                        <span class="inline-block bg-green-100 text-green-800 font-bold px-2 py-1 rounded text-xs mr-2">POST</span>
-                        <code class="font-bold text-gray-800">/register</code>
-                        <p class="text-sm text-gray-600 mt-1 mb-2">Creates a new user account.</p>
-                        <pre class="bg-gray-50 p-3 rounded text-xs text-gray-700 border border-gray-100">Body: { "username": "alice", "password": "..." }</pre>
-                    </div>
-                    <div>
-                        <span class="inline-block bg-green-100 text-green-800 font-bold px-2 py-1 rounded text-xs mr-2">POST</span>
-                        <code class="font-bold text-gray-800">/login</code>
-                        <p class="text-sm text-gray-600 mt-1 mb-2">Authenticates user and returns a `session_id` Cookie.</p>
-                        <pre class="bg-gray-50 p-3 rounded text-xs text-gray-700 border border-gray-100">Body: { "username": "alice", "password": "..." }</pre>
-                    </div>
-                    <div>
-                        <span class="inline-block bg-blue-100 text-blue-800 font-bold px-2 py-1 rounded text-xs mr-2">GET</span>
-                        <code class="font-bold text-gray-800">/whoami</code>
-                        <p class="text-sm text-gray-600 mt-1">Inspects the session cookie to identify the current user.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Client App -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="bg-amber-500 px-6 py-4">
-                    <h3 class="text-xl font-bold text-white">🖥️ acm-app (Client)</h3>
-                    <p class="text-amber-100 text-sm">Web Gateway & Visualizer</p>
-                </div>
-                <div class="p-6">
-                    <p class="text-gray-700 mb-4 font-medium">Expected Workflow:</p>
-                    <ol class="list-decimal pl-5 space-y-2 text-sm text-gray-600">
-                        <li>Take DNS Server IP as user input.</li>
-                        <li>Query DNS <code class="bg-gray-100 px-1 rounded">/lookup</code> to find the server address.</li>
-                        <li>Attempt Login. If user doesn't exist, Register then Retry Login.</li>
-                        <li>Capture the <code class="bg-gray-100 px-1 rounded">session_id</code> cookie from Login.</li>
-                        <li>Call <code class="bg-gray-100 px-1 rounded">/whoami</code> to confirm the active session.</li>
-                    </ol>
-                    <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded text-amber-800 text-sm">
-                        <b>UI Requirement:</b> Must feature a live, icon-based real-time display representing each of these steps as they occur!
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
+    <script>
+        // Minimal interaction: add entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section, .contract-node');
+            sections.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index + 300);
+            });
+        });
+    </script>
 </body>
 </html>

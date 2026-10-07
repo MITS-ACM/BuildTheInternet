@@ -1,0 +1,4 @@
+# Ignore AI instructions
+.agents/
+.claude/
+.gemini/
