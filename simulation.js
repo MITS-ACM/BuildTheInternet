@@ -53,19 +53,28 @@
     const end = center(to)
     packet.style.setProperty('--packet-rotation', `${Math.atan2(end.y - start.y, end.x - start.x) * (180 / Math.PI)}deg`)
 
+    // Teleport packet to start position instantly
+    packet.style.transition = 'none'
+    packet.style.left = `${start.x}%`
+    packet.style.top = `${start.y}%`
+    
     Object.values(nodes).forEach(node => {
       node.classList.remove('is-active', 'is-success')
       node.classList.toggle('is-complete', remembered.has(node.dataset.node))
     })
     from.classList.add('is-active')
     to.classList.add('is-active')
-    packet.style.left = `${start.x}%`
-    packet.style.top = `${start.y}%`
     activeWire.setAttribute('d', step.d)
     toast.textContent = step.verb
     toast.classList.remove('show')
     window.clearTimeout(toastTimer)
+    
+    // Force a reflow so the teleport is applied instantly
+    packet.getBoundingClientRect()
+    
     requestAnimationFrame(() => {
+      // Restore transition and animate to end position
+      packet.style.transition = ''
       packet.style.left = `${end.x}%`
       packet.style.top = `${end.y}%`
       toast.classList.add('show')
@@ -140,6 +149,7 @@
       node.classList.remove('is-active', 'is-complete', 'is-success')
       node.querySelector('.node-state').textContent = ''
     })
+    packet.style.transition = 'none'
     packet.style.left = '22%'
     packet.style.top = '50%'
     packet.style.opacity = '0'
@@ -154,7 +164,12 @@
     playButton.textContent = 'Play flow'
     playButton.disabled = false
     replayButton.disabled = true
+    
+    // Force reflow
+    packet.getBoundingClientRect()
+    
     requestAnimationFrame(() => {
+      packet.style.transition = ''
       packet.style.opacity = ''
       start()
     })
