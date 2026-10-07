@@ -72,12 +72,15 @@
     // Force a reflow so the teleport is applied instantly
     packet.getBoundingClientRect()
     
+    // Use double requestAnimationFrame to ensure the teleport is painted
+    // before we re-enable transitions and move to the end position.
     requestAnimationFrame(() => {
-      // Restore transition and animate to end position
-      packet.style.transition = ''
-      packet.style.left = `${end.x}%`
-      packet.style.top = `${end.y}%`
-      toast.classList.add('show')
+      requestAnimationFrame(() => {
+        packet.style.transition = ''
+        packet.style.left = `${end.x}%`
+        packet.style.top = `${end.y}%`
+        toast.classList.add('show')
+      })
     })
 
     event.classList.toggle('is-success', Boolean(step.success))
@@ -169,9 +172,11 @@
     packet.getBoundingClientRect()
     
     requestAnimationFrame(() => {
-      packet.style.transition = ''
-      packet.style.opacity = ''
-      start()
+      requestAnimationFrame(() => {
+        packet.style.transition = ''
+        packet.style.opacity = ''
+        start()
+      })
     })
   })
 
