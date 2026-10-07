@@ -3,472 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUILD THE INTERNET | SYSTEM TERMINAL</title>
+    <title>Build The Internet — ACM Hackathon</title>
     <link rel="icon" type="image/png" href="acm_logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0B0B10;
-            --fg: #F8FAFC;
-            --card: #1E1E23;
-            --muted: #94A3B8;
-            --border: #1E293B;
-            --accent: #3B82F6;
-            --accent-glow: rgba(59, 130, 246, 0.4);
-            --destructive: #EF4444;
-            --font-mono: 'Fira Code', monospace;
-            --font-display: 'Share Tech Mono', monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --bg: #ffffff;
+            --text: #000000;
+            --text-secondary: #555555;
+            --border: #e0e0e0;
+            --accent: #0044cc;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--fg);
-            font-family: var(--font-mono);
-            line-height: 1.6;
-            padding: 2rem;
-            max-width: 1200px;
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
-        }
-
-        /* Scanline effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: var(--font-display);
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            padding: 4rem 2rem;
         }
 
         header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .logo-container {
-            display: flex;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.6s ease-out forwards;
         }
 
         .logo {
-            height: 48px;
-            /* In case logos are dark, add a light background for visibility */
-            background-color: var(--fg);
-            padding: 6px;
-            border-radius: 2px;
-            border: 1px solid var(--border);
+            height: 56px;
+            object-fit: contain;
         }
 
-        .system-status {
-            color: var(--accent);
-            font-size: 0.875rem;
-            text-align: right;
-            text-shadow: 0 0 8px var(--accent-glow);
-            animation: pulse 2s infinite;
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin: 0 0 1.5rem 0;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+        p.lead {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 36ch;
+            margin-bottom: 3rem;
         }
 
-        section {
-            margin-bottom: 4rem;
-        }
-
-        .section-header {
-            color: var(--muted);
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px dashed var(--border);
-            padding-bottom: 0.5rem;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .section-header::before {
-            content: "> [ ";
-            color: var(--accent);
-        }
-        .section-header::after {
-            content: " ]";
-            color: var(--accent);
-        }
-
-        /* Hero */
-        .hero h1 {
-            font-size: 3rem;
-            color: var(--fg);
-            margin-bottom: 1rem;
-            text-shadow: 0 0 10px rgba(248, 250, 252, 0.3);
-        }
-
-        .typing-cursor {
-            display: inline-block;
-            width: 12px;
-            height: 1em;
-            background-color: var(--accent);
-            vertical-align: middle;
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .meta-info {
+        .meta {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 500;
             display: flex;
             gap: 2rem;
-            color: var(--muted);
-            font-size: 0.875rem;
-            margin-top: 1rem;
+            border-bottom: 1px solid var(--text);
+            padding-bottom: 1rem;
+            margin-bottom: 6rem;
         }
 
-        .meta-item::before {
-            content: ":: ";
-            color: var(--accent);
+        h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 2rem 0;
         }
 
-        /* Rules */
         .rules-list {
             list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            padding: 0;
+            margin: 0 0 6rem 0;
         }
 
         .rules-list li {
-            background-color: var(--card);
-            border-left: 4px solid var(--accent);
-            padding: 1rem 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .rules-list li strong {
-            color: var(--fg);
-            display: block;
-            margin-bottom: 0.25rem;
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-        }
-
-        .rules-list li.critical {
-            border-left-color: var(--destructive);
-        }
-        .rules-list li.critical strong {
-            color: var(--destructive);
-        }
-
-        /* Contracts */
-        .contracts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        @media (min-width: 768px) {
-            .contracts-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .contract-node {
-            border: 1px solid var(--border);
-            background: var(--bg);
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+            padding-left: 1.5rem;
             position: relative;
         }
 
-        .contract-node::before {
-            content: "";
+        .rules-list li::before {
+            content: "—";
             position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0.5;
+            left: 0;
+            color: var(--text);
         }
 
-        .contract-header {
-            background-color: var(--card);
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .rules-list strong {
+            font-weight: 500;
+            color: var(--text);
         }
 
-        .contract-header h3 {
-            color: var(--fg);
-            font-size: 1.25rem;
+        .contract-block {
+            margin-bottom: 4rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
         }
 
-        .node-type {
-            font-size: 0.75rem;
-            color: var(--bg);
-            background-color: var(--muted);
-            padding: 0.1rem 0.5rem;
-            border-radius: 2px;
+        .contract-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .contract-body {
-            padding: 1.5rem;
+        .contract-desc {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
         }
 
         .endpoint {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 1rem;
             margin-bottom: 1.5rem;
-        }
-
-        .endpoint:last-child {
-            margin-bottom: 0;
+            align-items: baseline;
         }
 
         .method {
-            display: inline-block;
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            margin-right: 0.5rem;
-            font-weight: 600;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .method.get { color: var(--text); }
+        .method.post { color: var(--accent); }
+
+        .path-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
         }
 
         .path {
-            color: var(--fg);
-            font-weight: 500;
-        }
-
-        .desc {
-            color: var(--muted);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 1rem;
+            background: #f5f5f5;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            width: fit-content;
         }
 
         .payload {
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
             margin-top: 0.5rem;
-            background-color: #050508;
-            border: 1px solid #14141A;
-            padding: 0.75rem;
-            font-size: 0.8rem;
-            color: #A3A3A3;
-            overflow-x: auto;
         }
 
-        .client-flow {
-            counter-reset: flow-step;
-            list-style: none;
-            padding-top: 0.5rem;
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .client-flow li {
-            position: relative;
-            padding-left: 2rem;
-            margin-bottom: 1rem;
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        .client-flow li::before {
-            counter-increment: flow-step;
-            content: "0" counter(flow-step);
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: var(--accent);
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-        }
-
-        .req-highlight {
-            color: var(--accent);
-            border-bottom: 1px dashed var(--accent);
+        .hero-section {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.6s ease-out 0.2s forwards;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <img src="acm_logo.png" alt="ACM" class="logo">
+            <img src="convergelogo.png" alt="Converge" class="logo">
+        </header>
 
-    <header>
-        <div class="logo-container">
-            <img src="acm_logo.png" alt="ACM Logo" class="logo">
-            <img src="convergelogo.png" alt="Converge Logo" class="logo">
-        </div>
-        <div class="system-status">
-            STATUS: ONLINE<br>
-            NET: LOCALHOST
-        </div>
-    </header>
-
-    <main>
-        <section class="hero">
-            <h1>BUILD_THE_INTERNET<span class="typing-cursor"></span></h1>
-            <p style="color: var(--muted); max-width: 600px;">
-                A 4-hour hands-on technical challenge. Go beyond using the internet—build and connect your own mini internet system through contract-driven microservices.
-            </p>
-            <div class="meta-info">
-                <span class="meta-item">LOC: EXCEL LAB, MITS KOCHI</span>
-                <span class="meta-item">SYS_TIME: 14:00 - 18:00</span>
+        <div class="hero-section">
+            <h1>Build The Internet</h1>
+            <p class="lead">A hands-on technical challenge to build and connect a mini internet system through contract-driven microservices.</p>
+            
+            <div class="meta">
+                <span>Excel Lab, MITS Kochi</span>
+                <span>2:00 PM — 6:00 PM</span>
             </div>
-        </section>
 
-        <section id="rules">
-            <h2 class="section-header">SYSTEM_CONSTRAINTS</h2>
+            <h2>Rules of engagement</h2>
             <ul class="rules-list">
-                <li class="critical">
-                    <strong>01. STRICT MICROSERVICES</strong>
-                    Exactly 4 separate services must be built. Monolithic architectures will be rejected by the system.
-                </li>
-                <li>
-                    <strong>02. DYNAMIC DISCOVERY</strong>
-                    Direct inter-service communication is blocked. All services must resolve targets via the <code>acm-dns</code> registry.
-                </li>
-                <li class="critical">
-                    <strong>03. NO HARDCODED IPS</strong>
-                    Zero static IP addresses allowed. IPs must be injected at runtime via user input or environment variables.
-                </li>
-                <li>
-                    <strong>04. VISUAL TELEMETRY</strong>
-                    The <code>acm-app</code> client must be a web application featuring a real-time visual progress indicator of all backend network hops.
-                </li>
-                <li>
-                    <strong>05. ISOLATED DEVELOPMENT</strong>
-                    1 Participant = 1 Microservice. AI tooling is permitted, but cross-module collaboration is restricted until the final integration phase.
-                </li>
-                <li>
-                    <strong>06. IMMUTABLE CONTRACTS</strong>
-                    Provided API endpoints and schemas cannot be modified or removed. Extending with new endpoints is permitted.
-                </li>
+                <li><strong>Microservices only.</strong> The system must be four distinct services. Monolithic architectures will not be evaluated.</li>
+                <li><strong>Dynamic discovery.</strong> Services must use the DNS service to find each other. Direct communication bypassing DNS is prohibited.</li>
+                <li><strong>No hardcoded IPs.</strong> Every address must be injected at runtime via user input or environment variables.</li>
+                <li><strong>Visual client.</strong> The client must be a web application featuring a real-time visual progress indicator of all network hops.</li>
+                <li><strong>Isolated development.</strong> Each team member takes ownership of exactly one microservice. Collaboration on a single codebase occurs only during final integration.</li>
+                <li><strong>Strict contracts.</strong> Provided API endpoints and schemas cannot be modified or removed. Extending with new endpoints is permitted.</li>
             </ul>
-        </section>
 
-        <section id="contracts">
-            <h2 class="section-header">API_CONTRACTS</h2>
-            <div class="contracts-grid">
+            <h2>System contracts</h2>
+            
+            <div class="contract-block">
+                <div class="contract-title">acm-dns</div>
+                <div class="contract-desc">Dynamic service discovery registry.</div>
                 
-                <!-- DNS Service -->
-                <div class="contract-node">
-                    <div class="contract-header">
-                        <h3>acm-dns</h3>
-                        <span class="node-type">REGISTRY</span>
-                    </div>
-                    <div class="contract-body">
-                        <div class="endpoint">
-                            <span class="method">GET</span><span class="path">/lookup?domain={name}</span>
-                            <div class="desc">Resolves a domain name to its current destination IP address.</div>
-                        </div>
-                        <div class="endpoint">
-                            <span class="method">POST</span><span class="path">/register</span>
-                            <div class="desc">Registers a domain name, mapping it to the incoming request's source IP.</div>
-                            <div class="payload">{ "domain": "auth-service" }</div>
-                        </div>
+                <div class="endpoint">
+                    <div class="method get">GET</div>
+                    <div class="path-group">
+                        <span class="path">/lookup?domain={name}</span>
+                        <span class="payload">Resolves a domain name to its current destination IP address.</span>
                     </div>
                 </div>
-
-                <!-- DB Service -->
-                <div class="contract-node">
-                    <div class="contract-header">
-                        <h3>acm-db</h3>
-                        <span class="node-type">STORAGE</span>
-                    </div>
-                    <div class="contract-body">
-                        <div class="endpoint">
-                            <span class="method">POST</span><span class="path">/db/users</span>
-                            <div class="desc">Persists a new user record to storage.</div>
-                            <div class="payload">{ "username": "...", "password_hash": "..." }</div>
-                        </div>
-                        <div class="endpoint">
-                            <span class="method">GET</span><span class="path">/db/users/{username}</span>
-                            <div class="desc">Retrieves a stored user record for authentication checks.</div>
-                        </div>
+                <div class="endpoint">
+                    <div class="method post">POST</div>
+                    <div class="path-group">
+                        <span class="path">/register</span>
+                        <span class="payload">Body: { "domain": "auth-service" }</span>
                     </div>
                 </div>
-
-                <!-- Server Service -->
-                <div class="contract-node">
-                    <div class="contract-header">
-                        <h3>acm-server</h3>
-                        <span class="node-type">AUTH</span>
-                    </div>
-                    <div class="contract-body">
-                        <div class="endpoint">
-                            <span class="method">POST</span><span class="path">/register</span>
-                            <div class="desc">Hashes the password and creates a new user account.</div>
-                            <div class="payload">{ "username": "...", "password": "..." }</div>
-                        </div>
-                        <div class="endpoint">
-                            <span class="method">POST</span><span class="path">/login</span>
-                            <div class="desc">Validates credentials and issues a <code>session_id</code> cookie.</div>
-                            <div class="payload">{ "username": "...", "password": "..." }</div>
-                        </div>
-                        <div class="endpoint">
-                            <span class="method">GET</span><span class="path">/whoami</span>
-                            <div class="desc">Inspects the session cookie to return active user details.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Client App -->
-                <div class="contract-node" style="border-color: var(--accent);">
-                    <div class="contract-header">
-                        <h3 style="color: var(--accent);">acm-app</h3>
-                        <span class="node-type" style="background-color: var(--accent); color: var(--bg);">GATEWAY</span>
-                    </div>
-                    <div class="contract-body">
-                        <div class="desc" style="margin-top: 0; margin-bottom: 1rem; color: var(--fg);">
-                            Web client implementing the full flow visualization.
-                        </div>
-                        <ul class="client-flow">
-                            <li>Accept DNS Server IP from user input.</li>
-                            <li><span class="req-highlight">Query DNS</span> for the auth server address.</li>
-                            <li><span class="req-highlight">Attempt Login</span> (If fail -> Register -> Retry Login).</li>
-                            <li>Extract and persist the <code>session_id</code> cookie.</li>
-                            <li><span class="req-highlight">Verify Session</span> via <code>/whoami</code> endpoint.</li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
-        </section>
-    </main>
 
-    <script>
-        // Minimal interaction: add entrance animations
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('section, .contract-node');
-            sections.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(10px)';
-                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100 * index + 300);
-            });
-        });
-    </script>
+            <div class="contract-block">
+                <div class="contract-title">acm-db</div>
+                <div class="contract-desc">Low-level user storage.</div>
+                
+                <div class="endpoint">
+                    <div class="method post">POST</div>
+                    <div class="path-group">
+                        <span class="path">/db/users</span>
+                        <span class="payload">Body: { "username": "alice", "password_hash": "..." }</span>
+                    </div>
+                </div>
+                <div class="endpoint">
+                    <div class="method get">GET</div>
+                    <div class="path-group">
+                        <span class="path">/db/users/{username}</span>
+                        <span class="payload">Retrieves a stored user record.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contract-block">
+                <div class="contract-title">acm-server</div>
+                <div class="contract-desc">Authentication and session management.</div>
+                
+                <div class="endpoint">
+                    <div class="method post">POST</div>
+                    <div class="path-group">
+                        <span class="path">/register</span>
+                        <span class="payload">Body: { "username": "alice", "password": "..." }</span>
+                    </div>
+                </div>
+                <div class="endpoint">
+                    <div class="method post">POST</div>
+                    <div class="path-group">
+                        <span class="path">/login</span>
+                        <span class="payload">Body: { "username": "alice", "password": "..." }</span>
+                    </div>
+                </div>
+                <div class="endpoint">
+                    <div class="method get">GET</div>
+                    <div class="path-group">
+                        <span class="path">/whoami</span>
+                        <span class="payload">Inspects the session cookie to return active user details.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contract-block">
+                <div class="contract-title">acm-app</div>
+                <div class="contract-desc">The web client gateway.</div>
+                
+                <div class="endpoint" style="display: block;">
+                    <p style="margin-top: 0;">Expected execution flow:</p>
+                    <ol style="padding-left: 1.5rem; color: var(--text-secondary); line-height: 1.8;">
+                        <li>Accept DNS Server IP from user input.</li>
+                        <li>Query DNS for the auth server address.</li>
+                        <li>Attempt Login (If fail: Register, then Retry Login).</li>
+                        <li>Extract and persist the session_id cookie.</li>
+                        <li>Verify Session via the /whoami endpoint.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
