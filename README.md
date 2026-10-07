@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="acm_logo.png" alt="ACM Logo" height="80"/>
+  <img src="acm_logo.png" alt="ACM Logo" height="140"/>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="convergelogo.png" alt="Converge Logo" height="80"/>
 
