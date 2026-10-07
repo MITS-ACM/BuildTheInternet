@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Association_for_Computing_Machinery_%28ACM%29_logo.svg" alt="ACM Logo" height="80"/>
+  <img src="acm_logo.png" alt="ACM Logo" height="80"/>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://via.placeholder.com/150x80?text=Converge+Logo" alt="Converge Logo" height="80"/>
+  <img src="convergelogo.png" alt="Converge Logo" height="80"/>
 
   # 🌐 BUILD THE INTERNET
   **Build. Connect. Troubleshoot. Stand out.**

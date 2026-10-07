@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: acm-server
+  description: Authentication and session management service using simple cookie-based authentication.
+  version: 1.0.0
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session_id
+      description: Session cookie set upon successful login.
+
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      description: Creates a new user account with a username and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: alice
+                password:
+                  type: string
+                  example: secret123
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: User registered successfully
+        '400':
+          description: Invalid payload or user already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username already exists
+
+  /login:
+    post:
+      summary: Authenticate user and issue session cookie
+      description: Validates user credentials and sets a `session_id` cookie in the HTTP response headers.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: alice
+                password:
+                  type: string
+                  example: secret123
+      responses:
+        '200':
+          description: Authentication successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: session_id=xyz123sessiontoken; Path=/; HttpOnly
+              description: Sets the session cookie for subsequent requests.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Login successful
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid username or password
+
+  /whoami:
+    get:
+      summary: Get details of the currently logged-in user
+      description: Inspects the incoming `session_id` cookie to identify the current session holder.
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Active session found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  user_id:
+                    type: integer
+                    example: 101
+                  username:
+                    type: string
+                    example: alice
+        '401':
+          description: Missing or invalid session cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized - Invalid or missing session cookie
